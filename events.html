@@ -114,6 +114,8 @@
     <div class="category-bar">
         <button class="cat-btn" onclick="document.getElementById('culturals').scrollIntoView()">Culturals</button>
         <button class="cat-btn" onclick="document.getElementById('scitech').scrollIntoView()">Sci-Tech</button>
+        <button class="cat-btn" onclick="document.getElementById('ecell').scrollIntoView()">E-Cell</button>
+        <button class="cat-btn" onclick="document.getElementById('fintech').scrollIntoView()">FinTech</button>
     </div>
 
     <main class="events-container">
@@ -179,6 +181,42 @@
                         <p>Competitive programming battle. Solve complex algorithms and climb the leaderboards.</p>
                         <div class="venue-detail"><span>📍 Venue: Lab 102</span></div>
                         <button class="register-btn" onclick="registerEvent('AlgoClash', this)">Register</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="category-section" id="ecell">
+            <h2 class="category-title">E-Cell</h2>
+            <div class="events-grid">
+                <div class="event-card">
+                    <span class="event-badge">DAY 2 | 02:00 PM</span>
+                    <div class="media-container">
+                        <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=800" class="thumbnail">
+                    </div>
+                    <div class="event-info">
+                        <h3>E-Conclave</h3>
+                        <p>Entrepreneurship Conclave for budding founders to network and pitch ideas.</p>
+                        <div class="venue-detail"><span>📍 Venue: L 102</span></div>
+                        <button class="register-btn" onclick="registerEvent('E-Conclave', this)">Register</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="category-section" id="fintech">
+            <h2 class="category-title">FinTech</h2>
+            <div class="events-grid">
+                <div class="event-card">
+                    <span class="event-badge">DAY 1 | 01:00 PM</span>
+                    <div class="media-container">
+                        <img src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=1000&auto=format&fit=crop" class="thumbnail">
+                    </div>
+                    <div class="event-info">
+                        <h3>Trading Challenge</h3>
+                        <p>Real-time stock market simulation. Trade, profit, and master the world of finance.</p>
+                        <div class="venue-detail"><span>📍 Venue: L 101</span></div>
+                        <button class="register-btn" onclick="registerEvent('Trading Challenge', this)">Register</button>
                     </div>
                 </div>
             </div>
