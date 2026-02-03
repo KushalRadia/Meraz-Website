@@ -16,9 +16,9 @@
             background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(15px); 
             border-bottom: 1px solid rgba(0, 212, 255, 0.3); 
         }
-        .nav-logo { color: #00d4ff; font-size: 24px; font-weight: bold; text-decoration: none; letter-spacing: 3px; }
+        .nav-logo { color: #00d4ff; font-size: 24px; font-weight: bold; text-decoration: none; letter-spacing: 3px; cursor: pointer; }
         .nav-links { list-style: none; display: flex; gap: 30px; }
-        .nav-links a { color: white; text-decoration: none; font-size: 13px; text-transform: uppercase; font-weight: 600; transition: 0.3s; }
+        .nav-links a { color: white; text-decoration: none; font-size: 13px; text-transform: uppercase; font-weight: 600; transition: 0.3s; cursor: pointer; }
         .nav-links a:hover { color: #00d4ff; }
 
         /* HERO HEADER */
@@ -98,11 +98,11 @@
 <body>
 
     <nav class="navbar">
-        <a href="index.html" class="nav-logo">MERAZ 6.0</a>
+        <a onclick="window.location.href='index.html'" class="nav-logo">MERAZ 6.0</a>
         <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="#" id="nav-profile-link" style="display:none;">Profile</a></li>
-            <li><a href="registration.html" id="nav-login-link">Login</a></li>
+            <li><a onclick="window.location.href='index.html'">Home</a></li>
+            <li><a onclick="window.location.href='profile.html'" id="nav-profile-link" style="display:none;">Profile</a></li>
+            <li><a onclick="window.location.href='registration.html'" id="nav-login-link">Login</a></li>
         </ul>
     </nav>
 
@@ -183,69 +183,6 @@
                         <button class="register-btn" onclick="registerEvent('AlgoClash', this)">Register</button>
                     </div>
                 </div>
-
-                <div class="event-card">
-                    <span class="event-badge">DAY 2 | 11:30 AM</span>
-                    <div class="media-container">
-                        <img src="https://images.unsplash.com/photo-1508614589041-895b88991e3e?q=80&w=800" class="thumbnail">
-                        <video class="event-video" autoplay muted loop playsinline><source src="https://assets.mixkit.co/videos/preview/mixkit-drone-flying-over-a-forest-4416-large.mp4" type="video/mp4"></video>
-                    </div>
-                    <div class="event-info">
-                        <h3>Drone Run</h3>
-                        <p>Pilot your drones through complex obstacle courses. Speed wins the race.</p>
-                        <div class="venue-detail"><span>📍 Venue: Football Ground</span></div>
-                        <button class="register-btn" onclick="registerEvent('Drone Run', this)">Register</button>
-                    </div>
-                </div>
-
-                <div class="event-card">
-                    <span class="event-badge">DAY 3 | 09:00 AM</span>
-                    <div class="media-container">
-                        <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=800" class="thumbnail">
-                    </div>
-                    <div class="event-info">
-                        <h3>Robo Kabaddi</h3>
-                        <p>Mechanical strength meets classic strategy in the robotic Kabaddi arena.</p>
-                        <div class="venue-detail"><span>📍 Venue: L 101</span></div>
-                        <button class="register-btn" onclick="registerEvent('Robo Kabaddi', this)">Register</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="category-section" id="ecell">
-            <h2 class="category-title">E-Cell</h2>
-            <div class="events-grid">
-                <div class="event-card">
-                    <span class="event-badge">DAY 2 | 02:00 PM</span>
-                    <div class="media-container">
-                        <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=800" class="thumbnail">
-                    </div>
-                    <div class="event-info">
-                        <h3>E-Conclave</h3>
-                        <p>Entrepreneurship Conclave for budding founders to network and pitch ideas.</p>
-                        <div class="venue-detail"><span>📍 Venue: L 102</span></div>
-                        <button class="register-btn" onclick="registerEvent('E-Conclave', this)">Register</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="category-section" id="fintech">
-            <h2 class="category-title">FinTech</h2>
-            <div class="events-grid">
-                <div class="event-card">
-                    <span class="event-badge">DAY 1 | 01:00 PM</span>
-                    <div class="media-container">
-                        <img src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=1000&auto=format&fit=crop" class="thumbnail">
-                    </div>
-                    <div class="event-info">
-                        <h3>Trading Challenge</h3>
-                        <p>Real-time stock market simulation. Trade, profit, and master the world of finance.</p>
-                        <div class="venue-detail"><span>📍 Venue: L 101</span></div>
-                        <button class="register-btn" onclick="registerEvent('Trading Challenge', this)">Register</button>
-                    </div>
-                </div>
             </div>
         </section>
 
@@ -256,7 +193,7 @@
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // FIREBASE CONFIG
+        // FIREBASE CONFIG (Placeholder - ensure yours is filled)
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
             authDomain: "YOUR_PROJECT.firebaseapp.com",
@@ -284,10 +221,14 @@
                 if (docSnap.exists()) {
                     const registered = docSnap.data().events || [];
                     document.querySelectorAll('.register-btn').forEach(btn => {
-                        const eventName = btn.getAttribute('onclick').match(/'([^']+)'/)[1];
-                        if (registered.includes(eventName)) {
-                            btn.innerText = "Registered";
-                            btn.classList.add('registered');
+                        const onclickAttr = btn.getAttribute('onclick');
+                        if(onclickAttr) {
+                            const match = onclickAttr.match(/'([^']+)'/);
+                            if (match && registered.includes(match[1])) {
+                                btn.innerText = "Registered";
+                                btn.classList.add('registered');
+                                btn.onclick = null; 
+                            }
                         }
                     });
                 }
@@ -306,6 +247,7 @@
                 });
                 btn.innerText = "Registered";
                 btn.classList.add('registered');
+                btn.onclick = null;
             } catch (e) {
                 btn.innerText = "Register";
                 alert("Error: " + e.message);
