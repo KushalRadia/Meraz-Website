@@ -159,6 +159,7 @@
             backdrop-filter: blur(5px);
             cursor: pointer;
             z-index: 100;
+            display: inline-block; /* Added for better link behavior */
         }
 
         .home-btn:hover {
@@ -177,7 +178,7 @@
 
     <div class="grid-bg"></div>
     
-    <a onclick="window.location.href='index.html'" class="home-btn">&lt; HOME</a>
+    <a href="index.html" class="home-btn">&lt; HOME</a>
 
     <div class="reg-container">
         <div class="scan-line"></div>
