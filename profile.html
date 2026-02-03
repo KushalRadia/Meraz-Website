@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | Meraz 6.0</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #050505; color: white; min-height: 100vh; }
+
+        /* Navbar (Same as Events) */
+        .navbar { position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; z-index: 1000; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .nav-logo { color: white; font-size: 24px; font-weight: bold; text-decoration: none; letter-spacing: 2px; }
+        .nav-links { list-style: none; display: flex; gap: 30px; }
+        .nav-links a { color: white; text-decoration: none; font-size: 14px; text-transform: uppercase; font-weight: 600; }
+        
+        /* Profile Section */
+        .profile-container {
+            margin-top: 100px;
+            padding: 50px 10%;
+            display: flex;
+            gap: 50px;
+            flex-wrap: wrap;
+        }
+
+        /* User Card */
+        .user-card {
+            flex: 1;
+            min-width: 300px;
+            background: #111;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+
+        .avatar {
+            width: 100px; height: 100px;
+            background: linear-gradient(135deg, #00d4ff, #764ba2);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3rem; font-weight: bold;
+        }
+
+        h2 { margin-bottom: 10px; }
+        p.email { color: #888; margin-bottom: 30px; }
+
+        .logout-btn {
+            background: transparent; border: 1px solid #ff4444; color: #ff4444;
+            padding: 10px 30px; border-radius: 5px; cursor: pointer; transition: 0.3s;
+        }
+        .logout-btn:hover { background: #ff4444; color: white; }
+
+        /* Events List Section */
+        .events-list-section {
+            flex: 2;
+            min-width: 300px;
+        }
+        
+        .section-header { font-size: 1.5rem; color: #00d4ff; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+
+        .my-event-card {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #00d4ff;
+        }
+        
+        .status-badge {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="homepage.html" class="nav-logo">MERAZ</a>
+        <ul class="nav-links">
+            <li><a href="homepage.html">Home</a></li>
+            <li><a href="events.html">Events</a></li>
+        </ul>
+    </nav>
+
+    <div class="profile-container">
+        
+        <div class="user-card">
+            <div class="avatar" id="user-initial">?</div>
+            <h2 id="display-name">Loading...</h2>
+            <p class="email" id="display-email">...</p>
+            <button class="logout-btn" onclick="logout()">Log Out</button>
+        </div>
+
+        <div class="events-list-section">
+            <div class="section-header">My Registered Events</div>
+            <div id="events-wrapper">
+                <p style="color: #666;">Loading events...</p>
+            </div>
+        </div>
+
+    </div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  // --- PASTE YOUR FIREBASE CONFIG HERE ---
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "SENDER_ID",
+    appId: "APP_ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+        // User is signed in
+        document.getElementById('display-email').innerText = user.email;
+        
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            document.getElementById('display-name').innerText = data.name;
+            document.getElementById('user-initial').innerText = data.name.charAt(0).toUpperCase();
+            
+            // Render Events
+            const wrapper = document.getElementById('events-wrapper');
+            wrapper.innerHTML = ""; // Clear loading text
+
+            if (data.events && data.events.length > 0) {
+                data.events.forEach(event => {
+                    const card = document.createElement('div');
+                    card.className = 'my-event-card';
+                    card.innerHTML = `
+                        <span>${event}</span>
+                        <span class="status-badge">Confirmed</span>
+                    `;
+                    wrapper.appendChild(card);
+                });
+            } else {
+                wrapper.innerHTML = "<p>You haven't registered for any events yet.</p>";
+            }
+        }
+    } else {
+        // Not signed in
+        window.location.href = "registration.html";
+    }
+  });
+
+  window.logout = () => {
+    signOut(auth).then(() => {
+        window.location.href = "registration.html";
+    });
+  };
+</script>
+
+</body>
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events | Meraz 6.0</title>
+    <style>
+        /* CORE STYLES */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; scroll-behavior: smooth; }
+        body { background-color: #050505; color: #ffffff; overflow-x: hidden; line-height: 1.6; }
+
+        /* NAVBAR */
+        .navbar { 
+            position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; 
+            align-items: center; padding: 15px 50px; z-index: 1000; 
+            background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(15px); 
+            border-bottom: 1px solid rgba(0, 212, 255, 0.3); 
+        }
+        .nav-logo { color: #00d4ff; font-size: 24px; font-weight: bold; text-decoration: none; letter-spacing: 3px; }
+        .nav-links { list-style: none; display: flex; gap: 30px; }
+        .nav-links a { color: white; text-decoration: none; font-size: 13px; text-transform: uppercase; font-weight: 600; transition: 0.3s; }
+        .nav-links a:hover { color: #00d4ff; }
+
+        /* HERO HEADER */
+        .events-header { 
+            height: 40vh; display: flex; flex-direction: column; justify-content: center; 
+            align-items: center; background: linear-gradient(rgba(0,0,0,0.85), #050505), 
+            url('https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1500&q=80'); 
+            background-size: cover; background-position: center; text-align: center; 
+        }
+        .events-header h1 { 
+            font-size: clamp(2.5rem, 8vw, 5rem); letter-spacing: 10px; text-transform: uppercase; 
+            background: linear-gradient(#fff, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+        }
+
+        /* STICKY NAV BAR */
+        .category-bar { 
+            position: sticky; top: 60px; background: #050505; padding: 15px; 
+            display: flex; justify-content: center; gap: 12px; z-index: 900; 
+            border-bottom: 1px solid rgba(255,255,255,0.1); flex-wrap: wrap;
+        }
+        .cat-btn { 
+            background: transparent; border: 1px solid #333; color: #aaa; padding: 8px 22px; 
+            border-radius: 25px; cursor: pointer; transition: 0.3s; font-size: 11px; font-weight: 700; text-transform: uppercase;
+        }
+        .cat-btn:hover { border-color: #00d4ff; color: #00d4ff; background: rgba(0, 212, 255, 0.05); }
+
+        /* GRID SYSTEM */
+        .events-container { padding: 50px 8%; }
+        .category-section { margin-bottom: 100px; }
+        .category-title { 
+            font-size: 2rem; margin-bottom: 35px; color: #fff; 
+            border-left: 6px solid #00d4ff; padding-left: 20px; text-transform: uppercase; letter-spacing: 2px;
+        }
+        .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 40px; }
+
+        /* EVENT CARD */
+        .event-card { 
+            background: #111; border-radius: 20px; overflow: hidden; 
+            border: 1px solid rgba(255,255,255,0.05); transition: 0.4s ease; 
+            display: flex; flex-direction: column; position: relative;
+        }
+        .event-card:hover { transform: translateY(-10px); border-color: #00d4ff; box-shadow: 0 15px 45px rgba(0, 212, 255, 0.2); }
+
+        /* VISUALS */
+        .media-container { width: 100%; height: 220px; position: relative; overflow: hidden; background-color: #1a1a1a; }
+        .thumbnail { width: 100%; height: 100%; object-fit: cover; }
+        .event-video { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            object-fit: cover; opacity: 0; transition: opacity 0.6s ease; 
+        }
+        .event-card:hover .event-video { opacity: 1; }
+
+        /* VENUE & TIME BADGE */
+        .event-badge {
+            position: absolute; top: 15px; left: 15px; background: rgba(0, 0, 0, 0.85);
+            color: #00d4ff; padding: 5px 12px; border-radius: 5px; font-size: 0.75rem;
+            font-weight: bold; border: 1px solid #00d4ff; z-index: 10;
+        }
+
+        /* INFO AREA */
+        .event-info { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; background: #111; }
+        .event-info h3 { font-size: 1.6rem; color: #00d4ff; margin-bottom: 12px; font-weight: 700; }
+        .event-info p { color: #cccccc; font-size: 0.95rem; margin-bottom: 15px; line-height: 1.6; }
+        
+        .venue-detail { font-size: 0.85rem; color: #00d4ff; margin-bottom: 20px; display: flex; gap: 10px; font-weight: 600; }
+
+        /* BUTTONS */
+        .register-btn { 
+            margin-top: auto; width: 100%; padding: 14px; background: transparent; border: 1px solid #00d4ff; 
+            color: #00d4ff; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; 
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .register-btn:hover { background: #00d4ff; color: #000; }
+        .register-btn.registered { background: #28a745; border-color: #28a745; color: #fff; cursor: default; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="homepage.html" class="nav-logo">MERAZ 6.0</a>
+        <ul class="nav-links">
+            <li><a href="C:\Users\twink\OneDrive\Desktop\Folder\Codes\Vibe coding final\hompage.html">Home</a></li>
+            <li><a href="#" id="nav-profile-link" style="display:none;">Profile</a></li>
+            <li><a href="registration.html" id="nav-login-link">Login</a></li>
+        </ul>
+    </nav>
+
+    <header class="events-header">
+        <h1>Events</h1>
+        <p style="letter-spacing: 4px; color: #00d4ff; font-weight: bold;">GEARS OF GLORY: THE SCHEDULE</p>
+    </header>
+
+    <div class="category-bar">
+        <button class="cat-btn" onclick="document.getElementById('culturals').scrollIntoView()">Culturals</button>
+        <button class="cat-btn" onclick="document.getElementById('scitech').scrollIntoView()">Sci-Tech</button>
+        <button class="cat-btn" onclick="document.getElementById('ecell').scrollIntoView()">E-Cell</button>
+        <button class="cat-btn" onclick="document.getElementById('fintech').scrollIntoView()">FinTech</button>
+    </div>
+
+    <main class="events-container">
+        
+        <section class="category-section" id="culturals">
+            <h2 class="category-title">Culturals</h2>
+            <div class="events-grid">
+                <div class="event-card">
+                    <span class="event-badge">DAY 1 | 6:00 PM</span>
+                    <div class="media-container">
+                        <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=800" class="thumbnail">
+                        <video class="event-video" autoplay muted loop playsinline><source src="https://assets.mixkit.co/videos/preview/mixkit-fashion-show-runway-93-large.mp4" type="video/mp4"></video>
+                    </div>
+                    <div class="event-info">
+                        <h3>Attire Spectra</h3>
+                        <p>The flagship fashion show where elegance meets the Steampunk theme.</p>
+                        <div class="venue-detail"><span>📍 Venue: Main Stage</span></div>
+                        <button class="register-btn" onclick="registerEvent('Attire Spectra', this)">Register</button>
+                    </div>
+                </div>
+
+                <div class="event-card">
+                    <span class="event-badge">DAY 2 | 4:30 PM</span>
+                    <div class="media-container">
+                        <img src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=800" class="thumbnail">
+                        <video class="event-video" autoplay muted loop playsinline><source src="https://assets.mixkit.co/videos/preview/mixkit-mic-on-stage-in-the-dark-41551-large.mp4" type="video/mp4"></video>
+                    </div>
+                    <div class="event-info">
+                        <h3>Euphony</h3>
+                        <p>A soulful singing competition for the best vocalists across the nation.</p>
+                        <div class="venue-detail"><span>📍 Venue: OAT 101</span></div>
+                        <button class="register-btn" onclick="registerEvent('Euphony', this)">Register</button>
+                    </div>
+                </div>
+
+                <div class="event-card">
+                    <span class="event-badge">DAY 3 | 7:00 PM</span>
+                    <div class="media-container">
+                        <img src="https://images.unsplash.com/photo-1547153760-18fc86324498?q=80&w=800" class="thumbnail">
+                        <video class="event-video" autoplay muted loop playsinline><source src="https://assets.mixkit.co/videos/preview/mixkit-break-dancer-performing-a-routine-33980-large.mp4" type="video/mp4"></video>
+                    </div>
+                    <div class="event-info">
+                        <h3>In10sity</h3>
+                        <p>High-energy group dance competition showcasing raw power and choreography.</p>
+                        <div class="venue-detail"><span>📍 Venue: Auditorium</span></div>
+                        <button class="register-btn" onclick="registerEvent('In10sity', this)">Register</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="category-section" id="scitech">
+            <h2 class="category-title">Sci-Tech</h2>
+            <div class="events-grid">
+                <div class="event-card">
+                    <span class="event-badge">DAY 1 | 10:00 AM</span>
+                    <div class="media-container">
+                        <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=800" class="thumbnail">
+                        <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJwamNyeG93ZzR4Y3E4YXN0Ym84OHFscHh4ZzV3eGZ6ZzV3eGZ6ZzV3ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/L8K62iTDkzGX6/giphy.gif" class="event-video">
+                    </div>
+                    <div class="event-info">
+                        <h3>AlgoClash</h3>
+                        <p>Competitive programming battle. Solve complex algorithms and climb the leaderboards.</p>
+                        <div class="venue-detail"><span>📍 Venue: Lab 102</span></div>
+                        <button class="register-btn" onclick="registerEvent('AlgoClash', this)">Register</button>
+                    </div>
+                </div>
+
+                <div class="event-card">
+                    <span class="event-badge">DAY 2 | 11:30 AM</span>
+                    <div class="media-container">
+                        <img src="https://images.unsplash.com/photo-1508614589041-895b88991e3e?q=80&w=800" class="thumbnail">
+                        <video class="event-video" autoplay muted loop playsinline><source src="https://assets.mixkit.co/videos/preview/mixkit-drone-flying-over-a-forest-4416-large.mp4" type="video/mp4"></video>
+                    </div>
+                    <div class="event-info">
+                        <h3>Drone Run</h3>
+                        <p>Pilot your drones through complex obstacle courses. Speed wins the race.</p>
+                        <div class="venue-detail"><span>📍 Venue: Football Ground</span></div>
+                        <button class="register-btn" onclick="registerEvent('Drone Run', this)">Register</button>
+                    </div>
+                </div>
+
+                <div class="event-card">
+                    <span class="event-badge">DAY 3 | 09:00 AM</span>
+                    <div class="media-container">
+                        <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=800" class="thumbnail">
+                    </div>
+                    <div class="event-info">
+                        <h3>Robo Kabaddi</h3>
+                        <p>Mechanical strength meets classic strategy in the robotic Kabaddi arena.</p>
+                        <div class="venue-detail"><span>📍 Venue: L 101</span></div>
+                        <button class="register-btn" onclick="registerEvent('Robo Kabaddi', this)">Register</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="category-section" id="ecell">
+            <h2 class="category-title">E-Cell</h2>
+            <div class="events-grid">
+                <div class="event-card">
+                    <span class="event-badge">DAY 2 | 02:00 PM</span>
+                    <div class="media-container">
+                        <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=800" class="thumbnail">
+                    </div>
+                    <div class="event-info">
+                        <h3>E-Conclave</h3>
+                        <p>Entrepreneurship Conclave for budding founders to network and pitch ideas.</p>
+                        <div class="venue-detail"><span>📍 Venue: L 102</span></div>
+                        <button class="register-btn" onclick="registerEvent('E-Conclave', this)">Register</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="category-section" id="fintech">
+            <h2 class="category-title">FinTech</h2>
+            <div class="events-grid">
+                <div class="event-card">
+                    <span class="event-badge">DAY 1 | 01:00 PM</span>
+                    <div class="media-container">
+                        <img src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=1000&auto=format&fit=crop" class="thumbnail">
+                    </div>
+                    <div class="event-info">
+                        <h3>Trading Challenge</h3>
+                        <p>Real-time stock market simulation. Trade, profit, and master the world of finance.</p>
+                        <div class="venue-detail"><span>📍 Venue: L 101</span></div>
+                        <button class="register-btn" onclick="registerEvent('Trading Challenge', this)">Register</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // FIREBASE CONFIG
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "SENDER_ID",
+            appId: "APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+
+        onAuthStateChanged(auth, async (user) => {
+            const loginLink = document.getElementById("nav-login-link");
+            const profileLink = document.getElementById("nav-profile-link");
+            if (user) {
+                currentUser = user;
+                loginLink.style.display = "none";
+                profileLink.style.display = "block";
+                
+                const docSnap = await getDoc(doc(db, "users", user.uid));
+                if (docSnap.exists()) {
+                    const registered = docSnap.data().events || [];
+                    document.querySelectorAll('.register-btn').forEach(btn => {
+                        const eventName = btn.getAttribute('onclick').match(/'([^']+)'/)[1];
+                        if (registered.includes(eventName)) {
+                            btn.innerText = "Registered";
+                            btn.classList.add('registered');
+                        }
+                    });
+                }
+            }
+        });
+
+        window.registerEvent = async (eventName, btn) => {
+            if (!currentUser) { 
+                window.location.href = "registration.html"; 
+                return; 
+            }
+            btn.innerText = "Processing...";
+            try {
+                await updateDoc(doc(db, "users", currentUser.uid), {
+                    events: arrayUnion(eventName)
+                });
+                btn.innerText = "Registered";
+                btn.classList.add('registered');
+            } catch (e) {
+                btn.innerText = "Register";
+                alert("Error: " + e.message);
+            }
+        };
+    </script>
+</body>
+</html>
