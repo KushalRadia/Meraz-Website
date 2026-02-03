@@ -157,6 +157,8 @@
             transition: 0.3s;
             background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(5px);
+            cursor: pointer; /* Ensures cursor changes to hand */
+            display: inline-block;
         }
 
         .home-btn:hover {
@@ -175,7 +177,7 @@
 
     <div class="grid-bg"></div>
     
-    <a href="C:\Users\twink\OneDrive\Desktop\Folder\Codes\Vibe coding final\image.html" class="home-btn">&lt; HOME</a>
+    <a onclick="window.location.href='index.html'" class="home-btn">&lt; HOME</a>
 
     <div class="reg-container">
         <div class="scan-line"></div>
